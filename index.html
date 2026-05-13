@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exotic — Redirection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0c10;
+            --card: #161b22;
+            --cyan: #22d3ee;
+            --blue: #0ea5e9;
+            --text: #c9d1d9;
+            --red: #f87171;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Syne', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated background grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(34,211,238,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34,211,238,0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(40px); }
+        }
+
+        /* Glow blobs */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            opacity: 0.15;
+        }
+        .blob-1 {
+            width: 400px; height: 400px;
+            background: var(--cyan);
+            top: -100px; left: -100px;
+            animation: blobFloat 8s ease-in-out infinite;
+        }
+        .blob-2 {
+            width: 300px; height: 300px;
+            background: var(--blue);
+            bottom: -80px; right: -80px;
+            animation: blobFloat 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes blobFloat {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 20px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+            max-width: 560px;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34,211,238,0.08);
+            border: 1px solid rgba(34,211,238,0.3);
+            color: var(--cyan);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            padding: 5px 14px;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.2s;
+        }
+        .badge .dot {
+            width: 6px; height: 6px;
+            background: var(--cyan);
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        /* Emoji */
+        .emoji {
+            font-size: 3.5rem;
+            display: block;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.4s;
+            filter: drop-shadow(0 0 20px rgba(34,211,238,0.4));
+        }
+
+        /* Title */
+        h1 {
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.5s;
+        }
+        h1 span {
+            background: linear-gradient(90deg, var(--cyan), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Subtitle */
+        .sub {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: rgba(201,209,217,0.65);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.65s;
+        }
+        .sub code {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.82rem;
+            background: rgba(34,211,238,0.08);
+            border: 1px solid rgba(34,211,238,0.2);
+            color: var(--cyan);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        /* Divider */
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--blue));
+            margin: 0 auto 2rem;
+            border-radius: 2px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.75s;
+        }
+
+        /* CTA */
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--cyan), var(--blue));
+            color: #000;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 12px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 0.85s;
+        }
+        .cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(34,211,238,0.3);
+        }
+        .cta svg { width: 16px; height: 16px; }
+
+        /* Footer */
+        .footer {
+            margin-top: 3rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: rgba(201,209,217,0.25);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards 1s;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<div class="container">
+    <div class="badge">
+        <span class="dot"></span>
+        Redirection Exotic
+    </div>
+
+    <span class="emoji">👋😉</span>
+
+    <h1>Salut, <span>bienvenue chez Exotic !</span></h1>
+
+    <p class="sub">
+        Si tu es ici, c'est pas un hasard —<br>
+        tu as été redirigé depuis <code>exoticsecurity.s.gy</code>.<br><br>
+        Merci d'avoir cliqué ! Tu es désormais sur notre portail de sécurité réseau.
+    </p>
+
+    <div class="divider"></div>
+
+    <a class="cta" href="https://exotic.pinkmail.abrdns.com" target="_self">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+        Accéder à Exotic Hub
+    </a>
+
+    <p class="footer">Exotic Project • 2026 • Protection Native Activée</p>
+</div>
+
+</body>
+</html>
